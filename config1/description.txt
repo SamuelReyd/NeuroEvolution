@@ -1,0 +1,4 @@
+Classic population size and mutation rate. Small crossover number since the network is relativly small. 
+Selction / reproduction process is to select the NB_OF_CHOSEN best individuals, let them stay in the next generation and fill the rest of the population with their offsprings. It highly advantages selection over exploration and is good here because of the absence of local optima. 
+Mutation process is to reset a weight or bias with probability MUTATION_RATE
+The network is the most basic possible network. 

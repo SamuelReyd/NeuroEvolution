@@ -14,10 +14,6 @@ class Pipe:
     
     def update(self,near):
         self.x += self.speed
-        # if self == near:
-        #     self.color = BLUE
-        # else:
-        #     self.color = GREEN
     
     def check_out(self):
         return self.x + self.width < 0

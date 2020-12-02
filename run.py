@@ -16,8 +16,8 @@ def run(population, show_render):
     clock = pygame.time.Clock()
 
     pipes = [Pipe(Pipe.first_y)]
-    birds = [Bird() for _ in range(POPULATION_SIZE)]
-    scores = np.zeros(POPULATION_SIZE)  
+    birds = [Bird() for _ in range(population.popSize)]
+    scores = np.zeros(population.popSize)  
     score = 0
     while RUN:
         # Rendering
@@ -54,7 +54,7 @@ def run(population, show_render):
             p.update(near)
 
         still_any = False     
-        for i in range(POPULATION_SIZE):
+        for i in range(population.popSize):
             if birds[i].alive:
                 still_any = True
                 

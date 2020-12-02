@@ -26,9 +26,6 @@ class Bird:
         self.speed += self.shock
     
     def check_death(self, near):
-        rect1=pygame.Rect(near.x, 0, near.width, near.y)
-        rect2=pygame.Rect(near.x, near.y + near.gap,near.width, WINDOW_HEIGHT - (near.y + near.gap))
-
         if near.x <= self.x <= near.x + near.width and 0 < self.y <= near.y: return True
         if near.x <= self.x <= near.x + near.width and near.y + near.gap <= self.y <= WINDOW_HEIGHT: return True
         if self.y < self.radius or self.y > WINDOW_HEIGHT - self.radius: return True

@@ -3,15 +3,15 @@ import numpy as np
 import keras
 
 from NeuralNetwork import NeuralNetwork
-from Constants import *
 
 class GeneticAlgorithm :
 
-    def __init__(self, vecSizes, popSize, mutationRate, crossoverNb, mutationScale, tensor = False) :
+    def __init__(self, vecSizes, popSize, mutationRate, crossoverNb, mutationScale, nbChosen, tensor = False) :
         self.popSize = popSize
         self.mutationRate = mutationRate
         self.crossoverNb = crossoverNb
         self.mutationScale = mutationScale
+        self.nbChosen = nbChosen
         self.tensor = tensor
         if tensor:
             self.population = list()
@@ -34,6 +34,7 @@ class GeneticAlgorithm :
             return brain.feed_forward(input)
 
     def crossover(self, neuralNetwork1, neuralNetwork2) :
+        shape = neuralNetwork1.shape
         if self.tensor:
             layers1, layers2 = list(), list()
             for i in range(0, len(neuralNetwork1.get_weights()), 2):
@@ -71,8 +72,8 @@ class GeneticAlgorithm :
             newLayers.append(newLayer)
         if self.tensor:
             model = keras.models.Sequential()
-            model.add(keras.layers.Dense(LAYER_SIZES[1], input_dim = LAYER_SIZES[0]))
-            for i in LAYER_SIZES[2:]:
+            model.add(keras.layers.Dense(shape[1], input_dim = shape[0]))
+            for i in shape[2:]:
                 model.add(keras.layers.Dense(i))
             weights = list()
             for layer in newLayers:
@@ -80,12 +81,12 @@ class GeneticAlgorithm :
             model.set_weights(weights)
             return model
         else:
-            return NeuralNetwork(newLayers)
+            return NeuralNetwork(newLayers, shape)
 
     def mutation(self, flatLayer) :
         for pos in range(len(flatLayer)) :
             if (np.random.rand() < self.mutationRate) :
-                if (MUTATION_SCALE >= 0) :
+                if (self.mutationScale >= 0) :
                     flatLayer[pos] = flatLayer[pos] + self.mutationScale*np.random.uniform(-1, 1)
                 else :
                     flatLayer[pos] = np.random.uniform(-1, 1)
@@ -96,9 +97,9 @@ class GeneticAlgorithm :
         # for i in range(self.popSize) :
         #     parent1, parent2 = np.random.choice(self.population, 2, p = scores/np.sum(scores), replace = False)
         #     newPop.append(self.crossover(parent1, parent2))
-        possibleParents = sorted(self.population, key=lambda x: scores[self.population.index(x)])[-NB_OF_CHOSEN:]
+        possibleParents = sorted(self.population, key=lambda x: scores[self.population.index(x)])[-self.nbChosen:]
         newPop.extend(possibleParents)
-        for _ in range(NB_OF_CHOSEN, self.popSize):
+        for _ in range(self.nbChosen, self.popSize):
             father, mother = np.random.choice(possibleParents, 2)
             newPop.append(self.crossover(father, mother))
         self.population = newPop
